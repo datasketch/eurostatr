@@ -76,6 +76,18 @@ download.file(data_url, data_file)
 tec00118 <- read_tsv(data_file)
 
 
+
+
+
+######
+
+library(eurostat)
+dic_geo <- get_eurostat_dic("geo",lang = c("en"))
+names(dic_geo) <- c("geo", "name")
+
+######
+
+
 ld <- list()
 
 
@@ -90,7 +102,8 @@ third_country_illegals <- third_country_illegals0 |>
   group_by(geo) |>
   arrange(desc(TIME_PERIOD), .by_group = TRUE) |>
   slice(1) |>
-  ungroup()
+  ungroup() |>
+  left_join(dic_geo)
 third_country_illegals
 
 l1 <- list(
@@ -113,7 +126,9 @@ pop_public_water <- pop_public_water0 |>
   group_by(geo) |>
   arrange(desc(TIME_PERIOD), .by_group = TRUE) |>
   slice(1) |>
-  ungroup()
+  ungroup()|>
+  left_join(dic_geo)
+
 l2 <- list(
   code = code,
   description = "Population connected to public water supply",
@@ -133,7 +148,8 @@ prison_pop <- prison_pop0 |>
   group_by(geo) |>
   arrange(desc(TIME_PERIOD), .by_group = TRUE) |>
   slice(1) |>
-  ungroup()
+  ungroup()|>
+  left_join(dic_geo)
 
 l3 <- list(
   code = code,
@@ -157,7 +173,8 @@ pop <- pop0 |>
   group_by(geo) |>
   arrange(desc(TIME_PERIOD), .by_group = TRUE) |>
   slice(1) |>
-  ungroup()
+  ungroup() |>
+  left_join(dic_geo)
 
 l4 <- list(
   code = code,
@@ -180,7 +197,8 @@ ukranians <- ukranians0 |>
   group_by(geo) |>
   arrange(desc(TIME_PERIOD), .by_group = TRUE) |>
   slice(1) |>
-  ungroup()
+  ungroup() |>
+  left_join(dic_geo)
 
 l5 <- list(
   code = code,
@@ -191,5 +209,7 @@ l5 <- list(
 ld <- c(l5, ld)
 
 eu_data <- ld
+
+
 
 usethis::use_data(eu_data, overwrite = TRUE)
